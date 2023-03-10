@@ -1,6 +1,6 @@
 # NFTLIST App
 
-The NFTLIST app displays available NTFs via different block-chain address. This application is available on [MoviesHub App](https://nftlist-lgjh.onrender.com/).
+The NFTLIST app displays available NTFs via different block-chain address. This application is available on [MoviesHub App](https://ntf-list.onrender.com).
 
 ## Getting Started
 
@@ -20,7 +20,7 @@ This project was built using React, Typescript, React-bootstrap and Styled-compo
 
 ### `User Interface`
 
-This project is a single page application this with buttons displaying the available block-chain address and grid of cards to show available NTFs with respect to any address. This application is supper responsive on any plateform
+This project is an unambiguous single page application this with buttons displaying the available block-chain address and grid of cards to show available NTFs with respect to any address. This application is supper responsive on any plateform
 
 ### `Data Manipulations`
 
@@ -29,5 +29,5 @@ Data used was gotten from the (https://blockspan.com/). The free NFT APi was use
 
 
 ### `Deployment`
-This project was deployed on Render and can be acccessed via [NFTLIST App](https://nftlist-lgjh.onrender.com/).
+This project was deployed on Render and can be acccessed via [NFTLIST App](https://ntf-list.onrender.com).
 

@@ -19,8 +19,8 @@ export const HomePage = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [displayNumber, setDisplayNumber] = useState(0);
 	const [blockChainAddress, setBlockChainAddress] = useState("eth-main");
-	const { data: allNFTs, isLoading } = useGetAllNftsQuery(blockChainAddress);
-	const { data: singleNtfData } = useGetSingleNftQuery(key);
+	// const { data: allNFTs, isLoading } = useGetAllNftsQuery(blockChainAddress);
+	// const { data: singleNtfData } = useGetSingleNftQuery(key);
 
 	// all block-chain address
 	const blockChains = [
