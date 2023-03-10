@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "NFTLISt App",
+  "name": "Displays List of Available NTFs",
   "icons": [
     {
       "src": "favicon.ico",
