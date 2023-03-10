@@ -5,15 +5,15 @@ export const nftApi = createApi({
 	reducerPath: "nftApi",
 	baseQuery: baseQuery,
 	endpoints: (builder) => ({
-		getAllNfts: builder.query({
-			query: ({ contract_address }) => ({
-				url: `/nfts/contract/${contract_address}?chain=eth-main&include_current_owners=true&include_recent_price=true&page_size=25`,
+		getAllNfts: builder.query<any, string>({
+			query: (blockChainAddress) => ({
+				url: `/exchanges/collections?chain=${blockChainAddress}&exchange=opensea&page_size=25`,
 				method: "GET",
 			}),
 		}),
-		getSingleNft: builder.query({
-			query: ({ contract_address, token_id }) => ({
-				url: `/nfts/contract/${contract_address}/token/${token_id}?chain=eth-main`,
+		getSingleNft: builder.query<any, { key: string }>({
+			query: ({ key }) => ({
+				url: `/exchanges/collections/key/${key}?chain=eth-main&exchange=opensea`,
 				method: "GET",
 			}),
 		}),

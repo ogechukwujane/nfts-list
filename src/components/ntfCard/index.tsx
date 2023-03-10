@@ -4,13 +4,15 @@ import { colors } from "../colors";
 export const NtfCard = ({
 	title,
 	image,
+	onClick,
 	...prop
 }: {
 	title: string;
 	image?: string;
+	onClick?: () => void;
 }) => {
 	return (
-		<Container {...prop}>
+		<Container onClick={onClick} {...prop}>
 			<ImageWrap className="m-3">
 				<img src={image} alt="NTF" />
 			</ImageWrap>
