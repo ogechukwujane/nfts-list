@@ -58,7 +58,7 @@ const Styled = styled.div`
 `;
 const Header = styled.p`
 	font-weight: 600;
-	font-size: 1.5em;
+	font-size: 1.2em;
 	line-height: 24px;
 	color: ${colors.black};
 `;

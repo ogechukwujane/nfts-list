@@ -11,8 +11,8 @@ export const nftApi = createApi({
 				method: "GET",
 			}),
 		}),
-		getSingleNft: builder.query<any, { key: string }>({
-			query: ({ key }) => ({
+		getSingleNft: builder.query<any, string>({
+			query: (key) => ({
 				url: `/exchanges/collections/key/${key}?chain=eth-main&exchange=opensea`,
 				method: "GET",
 			}),

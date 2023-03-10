@@ -6,27 +6,30 @@ import {
 	ImageContainer,
 	ModalContent,
 	Paragraph,
-	Text,
 } from "./styles";
 import { Container } from "react-bootstrap";
-import { AppNav, CustomButton, ModalComp } from "../../components";
+import { AppNav, CustomButton, ModalComp, Paginate } from "../../components";
 import { NtfCard } from "../../components/ntfCard";
-import { useGetAllNftsQuery } from "../../store/ntfApi";
+import { useGetAllNftsQuery, useGetSingleNftQuery } from "../../store/ntfApi";
 
 export const HomePage = () => {
+	const [key, setKey] = useState("");
+    const [pageNumber, setPageNumber] = useState(1);
 	const [showModal, setShowModal] = useState(false);
 	const [displayNumber, setDisplayNumber] = useState(0);
-	const [blockChainAddress, setBlockChainAddress] = useState("eth-main");
-	// const {
-	// 	data: allNFTs,
-	// 	isLoading,
-	// 	error,
-	// } = useGetAllNftsQuery(blockChainAddress);
-	// console.log("allNFTs", allNFTs);
-	// console.log("isLoading", isLoading);
-	// console.log("error", error);
-
-	//all block-chain address
+	// 
+const [blockChainAddress, setBlockChainAddress] = useState("eth-main");
+	const {
+		data: allNFTs,
+		isLoading,
+		error,
+	} = useGetAllNftsQuery(blockChainAddress);
+	const {data: singleNtfData} = useGetSingleNftQuery(key)
+	console.log("allNFTs", allNFTs);
+	console.log("isLoading", isLoading);
+	console.log("singleNtfData", singleNtfData);
+    
+	// all block-chain address
 	const blockChains = [
 		"eth-main",
 		"arbitrum-main",
@@ -43,6 +46,10 @@ export const HomePage = () => {
 			return () => clearTimeout(interval);
 		}
 	}, [displayNumber]);
+
+	const TotalPages = Math.ceil(allNFTs?.total ?? 0) / 25;
+	// const TotalPages = 5;
+    console.log(TotalPages,'TotalPages')
 
 	return (
 		<div>
@@ -65,19 +72,17 @@ export const HomePage = () => {
 					</div>
 
 					<Grid>
-						{/* {allNFTs?.results?.map((item: any, index: number) => (
+						{allNFTs?.results?.map((item: any, index: number) => (
 							<NtfCard
                             key={index}
 								image={item?.image_url}
 								title={item?.name}
-                                onClick={() => setShowModal(true)}
+                                onClick={() => {
+                                    setKey(item.key)
+                                    setShowModal(true)
+                                }}
 							/>
-						))} */}
-						<NtfCard title="NTF Card" onClick={() => setShowModal(true)} />
-						<NtfCard title="NTF Card" />
-						<NtfCard title="NTF Card" />
-						<NtfCard title="NTF Card" />
-						<NtfCard title="NTF Card" />
+						))}
 					</Grid>
 				</div>
 			</Container>
@@ -87,31 +92,34 @@ export const HomePage = () => {
 				handleClose={() => setShowModal(false)}
 				close={true}
 				centered
-                className="mx-lg-4"
-				modalTitle="Name here"
+				className="mx-lg-4"
+				modalTitle={singleNtfData?.name}
 				modalBody={
 					<ModalContent>
-						<ImageContainer>img</ImageContainer>
+						<ImageContainer><img src={singleNtfData?.image_url} alt="NFT" /></ImageContainer>
 						<Description className="my-3">
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus
-							sit incidunt cumque quidem est hic voluptatem soluta, blanditiis
-							eligendi fuga laudantium? Dolore nemo dolorem dignissimos nam
-							dolorum aperiam architecto totam?
+							{singleNtfData?.description}
 						</Description>
-						<div className="d-flex justify-content-between align-items-center my-2">
-							<Paragraph>Total minted:</Paragraph>
-							<Paragraph>Total Sales:</Paragraph>
+						<div className="d-flex justify-content-between align-items-center my-3">
+							<Paragraph>{`Total minted: ${singleNtfData?.stats?.total_minted}`}</Paragraph>
+							<Paragraph>{`Total Sales: ${singleNtfData?.stats?.total_sales}`}</Paragraph>
 						</div>
 						<div className="d-flex justify-content-between align-items-center pb-3">
-							<Paragraph>Total supply:</Paragraph>
-							<Paragraph>Total volume: </Paragraph>
+							<Paragraph>{`Total supply: ${singleNtfData?.stats?.total_supply}`}</Paragraph>
+							<Paragraph>{`Total volume: ${singleNtfData?.stats?.total_volume}`}</Paragraph>
 						</div>
 						<div className="d-flex justify-content-between align-items-center my-3">
-							<Button>Cancel</Button>
-							<Button status="buy">Buy</Button>
+							<Button onClick={() => setShowModal(false)}>Cancel</Button>
+							<Button status="buy"><a href={singleNtfData?.exchange_url} target="blank">Buy</a></Button>
 						</div>
 					</ModalContent>
 				}
+			/>
+
+			<Paginate
+				noOfPages={TotalPages}
+				pageNo={pageNumber}
+				setPageNumber={setPageNumber}
 			/>
 		</div>
 	);
