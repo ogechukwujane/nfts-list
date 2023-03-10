@@ -22,7 +22,7 @@ export const HomePage = () => {
 	const [ntfkey, setNtfKey] = useState("");
 	const [pageNumber, setPageNumber] = useState(1);
 	const [showModal, setShowModal] = useState(false);
-	const [displayNumber, setDisplayNumber] = useState(0);
+	const [displayButton, setDisplayButton] = useState(0);
 	const [getNextDataParam, setGetNextDataParam] = useState("");
 	const [blockChainAddress, setBlockChainAddress] = useState("eth-main");
 	const nftQueryParam = {
@@ -36,7 +36,7 @@ export const HomePage = () => {
 	} = useGetAllNftsQuery(nftQueryParam);
 	const { data: singleNtfData } = useGetSingleNftQuery(ntfkey);
 
-	// all block-chain address
+	// all block-chain address/categories
 	const blockChains = [
 		"eth-main",
 		"arbitrum-main",
@@ -46,13 +46,13 @@ export const HomePage = () => {
 	];
 
 	useEffect(() => {
-		if (displayNumber < 5) {
+		if (displayButton < 5) {
 			let interval = setTimeout(() => {
-				setDisplayNumber((prev) => prev + 1);
+				setDisplayButton((prev) => prev + 1);
 			}, 0.05 * 1000);
 			return () => clearTimeout(interval);
 		}
-	}, [displayNumber]);
+	}, [displayButton]);
 
 	//pagination functions
 	const TotalPages = Math.ceil(allNFTs?.total ?? 0) / 25;
@@ -83,7 +83,7 @@ export const HomePage = () => {
 									onClick={() => setBlockChainAddress(item)}
 									btnText={item}
 									isActive={item === blockChainAddress}
-									isDisplayed={displayNumber >= index}
+									isDisplayed={displayButton >= index}
 								/>
 							))}
 						</div>
