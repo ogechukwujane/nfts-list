@@ -20,7 +20,7 @@ This project was built using React, Typescript, React-bootstrap and Styled-compo
 
 ### `User Interface`
 
-This project is an unambiguous single page application this with buttons displaying the available block-chain address and grid of cards to show available NTFs with respect to any address. This application is supper responsive on any plateform
+This project is an unambiguous single page application with buttons displaying the available block-chain address and grid of cards to show available NTFs with respect to any address. This application is supper responsive on any plateform
 
 ### `Data Manipulations`
 

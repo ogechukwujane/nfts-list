@@ -5,9 +5,12 @@ export const nftApi = createApi({
 	reducerPath: "nftApi",
 	baseQuery: baseQuery,
 	endpoints: (builder) => ({
-		getAllNfts: builder.query<any, string>({
-			query: (blockChainAddress) => ({
-				url: `/exchanges/collections?chain=${blockChainAddress}&exchange=opensea&page_size=25`,
+		getAllNfts: builder.query<
+			any,
+			{ blockChainAddress: string; getNextDataParam: string }
+		>({
+			query: ({ blockChainAddress, getNextDataParam }) => ({
+				url: `/exchanges/collections?chain=${blockChainAddress}&exchange=opensea&cursor=${getNextDataParam}&page_size=25`,
 				method: "GET",
 			}),
 		}),

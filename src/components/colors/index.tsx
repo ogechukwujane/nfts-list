@@ -7,5 +7,4 @@ export const colors = {
 	primaryColor: "#081908",
 	cancelColor: '#f25050',
 	primaryColorLight: "rgba(60, 155, 117, 0.75)",
-	// primaryColorLight: "#4a604a",
 };

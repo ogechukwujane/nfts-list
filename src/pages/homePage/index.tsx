@@ -1,26 +1,40 @@
-import { useState, useEffect } from "react";
 import {
 	Button,
+	ContentContainer,
 	Description,
 	Grid,
 	ImageContainer,
 	ModalContent,
+	PageNumber,
+	PaginationButton,
+	PaginationContainer,
 	Paragraph,
 } from "./styles";
+import { AppNav, AppFooter, CustomButton, ModalComp } from "../../components";
+import { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import { NtfCard } from "../../components/ntfCard";
-import { AppNav,AppFooter, CustomButton, ModalComp, Paginate } from "../../components";
 import { useGetAllNftsQuery, useGetSingleNftQuery } from "../../store/ntfApi";
 
 export const HomePage = () => {
-	const [key, setKey] = useState("");
+	let paginationArray: string[] = [];
+	const [ntfkey, setNtfKey] = useState("");
 	const [pageNumber, setPageNumber] = useState(1);
 	const [showModal, setShowModal] = useState(false);
 	const [displayNumber, setDisplayNumber] = useState(0);
+	const [getNextDataParam, setGetNextDataParam] = useState("");
 	const [blockChainAddress, setBlockChainAddress] = useState("eth-main");
-	// const { data: allNFTs, isLoading } = useGetAllNftsQuery(blockChainAddress);
-	// const { data: singleNtfData } = useGetSingleNftQuery(key);
+	const nftQueryParam = {
+		blockChainAddress: blockChainAddress,
+		getNextDataParam: getNextDataParam,
+	};
+	const {
+		data: allNFTs,
+		isLoading,
+		isFetching,
+	} = useGetAllNftsQuery(nftQueryParam);
+	const { data: singleNtfData } = useGetSingleNftQuery(ntfkey);
 
 	// all block-chain address
 	const blockChains = [
@@ -40,13 +54,27 @@ export const HomePage = () => {
 		}
 	}, [displayNumber]);
 
+	//pagination functions
 	const TotalPages = Math.ceil(allNFTs?.total ?? 0) / 25;
+	const handleShowPrevPage = () => {
+		if (pageNumber !== 1) {
+			setGetNextDataParam(paginationArray[pageNumber - 1]);
+			setPageNumber(pageNumber - 1);
+		}
+	};
+	const handleShowNextPage = () => {
+		if (pageNumber < TotalPages) {
+			setPageNumber(pageNumber + 1);
+			setGetNextDataParam(allNFTs?.cursor);
+			paginationArray.push(allNFTs?.cursor);
+		}
+	};
 
 	return (
 		<div>
 			<AppNav />
 			<Container>
-				<div className="d-flex flex-column gap-5 mt-5 mb-5">
+				<ContentContainer className="d-flex flex-column gap-5 mt-5 mb-5">
 					<div className="d-flex align-items-center gap-3">
 						<div className="d-flex align-items-center  flex-wrap gap-4">
 							{blockChains.map((item: string, index: number) => (
@@ -62,8 +90,10 @@ export const HomePage = () => {
 					</div>
 
 					<Grid>
-						{isLoading ? (
-							<Spinner animation="border" />
+						{isLoading || isFetching ? (
+							<div className="d-flex align-items-center justify-content-center w-100">
+								<Spinner animation="border" />
+							</div>
 						) : (
 							<>
 								{allNFTs?.results?.map((item: any, index: number) => (
@@ -72,7 +102,7 @@ export const HomePage = () => {
 										image={item?.image_url}
 										title={item?.name}
 										onClick={() => {
-											setKey(item.key);
+											setNtfKey(item.key);
 											setShowModal(true);
 										}}
 									/>
@@ -80,15 +110,24 @@ export const HomePage = () => {
 							</>
 						)}
 					</Grid>
-					<Paginate
-						noOfPages={TotalPages}
-						pageNo={pageNumber}
-						setPageNumber={setPageNumber}
-					/>
-				</div>
+
+					{/* pagination: The pagination was made simple because of the way the endpoint allows fetching of paginated data */}
+					{allNFTs?.results?.length && (
+						<PaginationContainer className="mt-5 gap-2">
+							<PaginationButton onClick={handleShowPrevPage}>
+								Prev
+							</PaginationButton>
+							<PageNumber>{pageNumber}</PageNumber>
+							<PaginationButton onClick={handleShowNextPage}>
+								Next
+							</PaginationButton>
+						</PaginationContainer>
+					)}
+				</ContentContainer>
 			</Container>
 			<AppFooter />
 
+			{/* pop up modal */}
 			<ModalComp
 				show={showModal}
 				handleClose={() => setShowModal(false)}
