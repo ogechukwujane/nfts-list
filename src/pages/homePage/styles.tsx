@@ -8,11 +8,6 @@ export const Grid = styled.div`
 	column-gap: 20px;
 	row-gap: 20px;
 `;
-export const Text = styled.p`
-	font-size: 1.3em;
-	font-weight: 500;
-	line-height: 21px;
-`;
 export const ModalContent = styled.div``;
 export const ImageContainer = styled.div`
 	width: 100%;

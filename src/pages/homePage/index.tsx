@@ -8,27 +8,20 @@ import {
 	Paragraph,
 } from "./styles";
 import { Container } from "react-bootstrap";
-import { AppNav, CustomButton, ModalComp, Paginate } from "../../components";
+import Spinner from "react-bootstrap/Spinner";
 import { NtfCard } from "../../components/ntfCard";
+import { AppNav,AppFooter, CustomButton, ModalComp, Paginate } from "../../components";
 import { useGetAllNftsQuery, useGetSingleNftQuery } from "../../store/ntfApi";
 
 export const HomePage = () => {
 	const [key, setKey] = useState("");
-    const [pageNumber, setPageNumber] = useState(1);
+	const [pageNumber, setPageNumber] = useState(1);
 	const [showModal, setShowModal] = useState(false);
 	const [displayNumber, setDisplayNumber] = useState(0);
-	// 
-const [blockChainAddress, setBlockChainAddress] = useState("eth-main");
-	const {
-		data: allNFTs,
-		isLoading,
-		error,
-	} = useGetAllNftsQuery(blockChainAddress);
-	const {data: singleNtfData} = useGetSingleNftQuery(key)
-	console.log("allNFTs", allNFTs);
-	console.log("isLoading", isLoading);
-	console.log("singleNtfData", singleNtfData);
-    
+	const [blockChainAddress, setBlockChainAddress] = useState("eth-main");
+	// const { data: allNFTs, isLoading } = useGetAllNftsQuery(blockChainAddress);
+	// const { data: singleNtfData } = useGetSingleNftQuery(key);
+
 	// all block-chain address
 	const blockChains = [
 		"eth-main",
@@ -48,8 +41,6 @@ const [blockChainAddress, setBlockChainAddress] = useState("eth-main");
 	}, [displayNumber]);
 
 	const TotalPages = Math.ceil(allNFTs?.total ?? 0) / 25;
-	// const TotalPages = 5;
-    console.log(TotalPages,'TotalPages')
 
 	return (
 		<div>
@@ -58,7 +49,6 @@ const [blockChainAddress, setBlockChainAddress] = useState("eth-main");
 				<div className="d-flex flex-column gap-5 mt-5 mb-5">
 					<div className="d-flex align-items-center gap-3">
 						<div className="d-flex align-items-center  flex-wrap gap-4">
-							{/* <Text>Address List:</Text> */}
 							{blockChains.map((item: string, index: number) => (
 								<CustomButton
 									key={index}
@@ -72,20 +62,32 @@ const [blockChainAddress, setBlockChainAddress] = useState("eth-main");
 					</div>
 
 					<Grid>
-						{allNFTs?.results?.map((item: any, index: number) => (
-							<NtfCard
-                            key={index}
-								image={item?.image_url}
-								title={item?.name}
-                                onClick={() => {
-                                    setKey(item.key)
-                                    setShowModal(true)
-                                }}
-							/>
-						))}
+						{isLoading ? (
+							<Spinner animation="border" />
+						) : (
+							<>
+								{allNFTs?.results?.map((item: any, index: number) => (
+									<NtfCard
+										key={index}
+										image={item?.image_url}
+										title={item?.name}
+										onClick={() => {
+											setKey(item.key);
+											setShowModal(true);
+										}}
+									/>
+								))}
+							</>
+						)}
 					</Grid>
+					<Paginate
+						noOfPages={TotalPages}
+						pageNo={pageNumber}
+						setPageNumber={setPageNumber}
+					/>
 				</div>
 			</Container>
+			<AppFooter />
 
 			<ModalComp
 				show={showModal}
@@ -96,7 +98,9 @@ const [blockChainAddress, setBlockChainAddress] = useState("eth-main");
 				modalTitle={singleNtfData?.name}
 				modalBody={
 					<ModalContent>
-						<ImageContainer><img src={singleNtfData?.image_url} alt="NFT" /></ImageContainer>
+						<ImageContainer>
+							<img src={singleNtfData?.image_url} alt="NFT" />
+						</ImageContainer>
 						<Description className="my-3">
 							{singleNtfData?.description}
 						</Description>
@@ -110,16 +114,14 @@ const [blockChainAddress, setBlockChainAddress] = useState("eth-main");
 						</div>
 						<div className="d-flex justify-content-between align-items-center my-3">
 							<Button onClick={() => setShowModal(false)}>Cancel</Button>
-							<Button status="buy"><a href={singleNtfData?.exchange_url} target="blank">Buy</a></Button>
+							<Button status="buy">
+								<a href={singleNtfData?.exchange_url} target="blank">
+									Buy
+								</a>
+							</Button>
 						</div>
 					</ModalContent>
 				}
-			/>
-
-			<Paginate
-				noOfPages={TotalPages}
-				pageNo={pageNumber}
-				setPageNumber={setPageNumber}
 			/>
 		</div>
 	);
