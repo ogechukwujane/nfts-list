@@ -1,6 +1,6 @@
 # NFTLIST App
 
-The NFTLIST app displays available NTFs via different block-chain address. This application is available on [MoviesHub App](https://ntf-list.onrender.com).
+The NFTLIST app displays available NTFs via different block-chain address. This application is available on [NFTLIST App](https://ntf-list.onrender.com).
 
 ## Getting Started
 
